@@ -243,9 +243,13 @@ fun LiquidBottomTabs(
                     shape = { Capsule() },
                     effects = {
                         val progress = dampedDragAnimation.pressProgress
+                        // Build the chromatic refraction pipeline before the first press.
+                        // At zero progress lens() skips shader creation, which makes the
+                        // first tab selection pay the shader compilation cost.
+                        val refractionProgress = progress.coerceAtLeast(0.001f)
                         lens(
-                            10f.dp.toPx() * progress,
-                            14f.dp.toPx() * progress,
+                            10f.dp.toPx() * refractionProgress,
+                            14f.dp.toPx() * refractionProgress,
                             chromaticAberration = true
                         )
                     },
