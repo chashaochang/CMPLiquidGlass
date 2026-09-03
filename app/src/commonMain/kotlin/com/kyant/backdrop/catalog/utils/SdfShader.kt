@@ -1,20 +1,14 @@
 package com.kyant.backdrop.catalog.utils
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.unit.dp
 import com.kyant.backdrop.BackdropEffectScope
 import org.intellij.lang.annotations.Language
 import org.jetbrains.compose.resources.DrawableResource
-import org.jetbrains.compose.resources.imageResource
 
-@Composable
-fun rememberSdfShader(drawableResource: DrawableResource): SdfShader {
-    val imageResource = imageResource(drawableResource)
-    return remember(imageResource) { SdfShader(imageResource) }
-}
+@androidx.compose.runtime.Composable
+expect fun rememberSdfShader(drawableResource: DrawableResource): SdfShader
 
 expect fun SdfShader(imageBitmap: ImageBitmap): SdfShader
 

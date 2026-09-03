@@ -20,7 +20,9 @@ import androidx.compose.ui.node.requireGraphicsContext
 import androidx.compose.ui.platform.InspectorInfo
 import androidx.compose.ui.unit.Density
 import com.kyant.backdrop.internal.ShapeProvider
+import com.kyant.backdrop.internal.blur
 import com.kyant.backdrop.internal.clipOutline
+import com.kyant.backdrop.isGraphicsLayerEffectsSupported
 import com.kyant.backdrop.isRenderEffectSupported
 
 internal class InnerShadowElement(
@@ -74,6 +76,7 @@ internal class InnerShadowNode(
     private var clipPath: Path? = null
 
     private var prevRadius = Float.NaN
+    private var prevPaintBlurRadius = Float.NaN
 
     override fun ContentDrawScope.draw() {
         drawContent()
@@ -81,6 +84,26 @@ internal class InnerShadowNode(
         if (!isRenderEffectSupported()) return
 
         val shadow = shadow() ?: return
+        if (!isGraphicsLayerEffectsSupported()) {
+            val outline = shapeProvider.shape.createOutline(size, layoutDirection, this)
+            val clipPath =
+                if (outline is Outline.Rounded) {
+                    clipPath ?: Path().also { clipPath = it }
+                } else {
+                    null
+                }
+
+            configurePaint(shadow)
+            paint.color = shadow.color.copy(alpha = shadow.color.alpha * shadow.alpha)
+
+            val canvas = drawContext.canvas
+            canvas.save()
+            canvas.clipOutline(outline, clipPath)
+            canvas.translate(shadow.offset.x.toPx(), shadow.offset.y.toPx())
+            canvas.drawOutline(outline, paint)
+            canvas.restore()
+            return
+        }
 
         val shadowLayer = shadowLayer
         if (shadowLayer != null) {
@@ -133,6 +156,8 @@ internal class InnerShadowNode(
     }
 
     override fun onAttach() {
+        if (!isRenderEffectSupported() || !isGraphicsLayerEffectsSupported()) return
+
         val graphicsContext = requireGraphicsContext()
         shadowLayer =
             graphicsContext.createGraphicsLayer().apply {
@@ -141,15 +166,20 @@ internal class InnerShadowNode(
     }
 
     override fun onDetach() {
-        val graphicsContext = requireGraphicsContext()
+        val graphicsContext = if (shadowLayer != null) requireGraphicsContext() else null
         shadowLayer?.let { layer ->
-            graphicsContext.releaseGraphicsLayer(layer)
+            graphicsContext?.releaseGraphicsLayer(layer)
             shadowLayer = null
         }
     }
 
     private fun DrawScope.configurePaint(shadow: InnerShadow) {
         paint.color = shadow.color
+        val radius = shadow.radius.toPx()
+        if (prevPaintBlurRadius != radius) {
+            paint.blur(radius)
+            prevPaintBlurRadius = radius
+        }
     }
 }
 

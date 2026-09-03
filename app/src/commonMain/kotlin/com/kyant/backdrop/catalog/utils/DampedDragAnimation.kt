@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 class DampedDragAnimation(
     private val animationScope: CoroutineScope,
@@ -126,6 +127,7 @@ class DampedDragAnimation(
         }
     }
 
+    @OptIn(ExperimentalTime::class)
     private fun updateVelocity() {
         velocityTracker.addPosition(
             Clock.System.now().toEpochMilliseconds(),

@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntSize
 import com.kyant.backdrop.internal.ShapeProvider
 import com.kyant.backdrop.internal.blur
+import com.kyant.backdrop.isGraphicsLayerEffectsSupported
+import com.kyant.backdrop.isRenderEffectSupported
 import kotlin.math.ceil
 
 internal class ShadowElement(
@@ -69,9 +71,18 @@ internal class ShadowNode(
     private var shadowLayer: GraphicsLayer? = null
 
     private val paint = Paint()
+    private var prevBlurRadius = Float.NaN
 
     override fun ContentDrawScope.draw() {
+        if (!isRenderEffectSupported()) return drawContent()
+
         val shadow = shadow() ?: return drawContent()
+        if (!isGraphicsLayerEffectsSupported()) {
+            val outline = shapeProvider.shape.createOutline(size, layoutDirection, this)
+            configurePaint(shadow)
+            drawContext.canvas.drawOutline(outline, paint)
+            return drawContent()
+        }
 
         val shadowLayer = shadowLayer
         if (shadowLayer != null) {
@@ -111,6 +122,8 @@ internal class ShadowNode(
     }
 
     override fun onAttach() {
+        if (!isRenderEffectSupported() || !isGraphicsLayerEffectsSupported()) return
+
         val graphicsContext = requireGraphicsContext()
         shadowLayer =
             graphicsContext.createGraphicsLayer().apply {
@@ -119,16 +132,20 @@ internal class ShadowNode(
     }
 
     override fun onDetach() {
-        val graphicsContext = requireGraphicsContext()
+        val graphicsContext = if (shadowLayer != null) requireGraphicsContext() else null
         shadowLayer?.let { layer ->
-            graphicsContext.releaseGraphicsLayer(layer)
+            graphicsContext?.releaseGraphicsLayer(layer)
             shadowLayer = null
         }
     }
 
     private fun DrawScope.configurePaint(shadow: Shadow) {
         paint.color = shadow.color
-        paint.blur(shadow.radius.toPx())
+        val radius = shadow.radius.toPx()
+        if (prevBlurRadius != radius) {
+            paint.blur(radius)
+            prevBlurRadius = radius
+        }
     }
 }
 

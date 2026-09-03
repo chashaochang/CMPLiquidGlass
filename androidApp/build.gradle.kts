@@ -1,5 +1,8 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 }
 
@@ -7,6 +10,11 @@ android {
     namespace = "com.kyant.backdrop.catalog"
     compileSdk = 37
     buildToolsVersion = "37.0.0"
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
 
     defaultConfig {
         applicationId = "com.kyant.backdrop.catalog"
@@ -54,8 +62,19 @@ android {
     }
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_11
+    }
+}
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(project(":app"))
+}
+
+configurations.configureEach {
+    exclude(group = "org.jetbrains.androidx.lifecycle")
+    exclude(group = "org.jetbrains.androidx.savedstate")
 }

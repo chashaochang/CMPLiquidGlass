@@ -1,12 +1,22 @@
 package com.kyant.backdrop.catalog.utils
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asSkiaBitmap
 import com.kyant.backdrop.BackdropEffectScope
 import com.kyant.backdrop.asSkikoRuntimeShader
 import com.kyant.backdrop.effects.runtimeShaderEffect
 import com.kyant.backdrop.isRuntimeShaderSupported
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.imageResource
+
+@Composable
+actual fun rememberSdfShader(drawableResource: DrawableResource): SdfShader {
+    val imageResource = imageResource(drawableResource)
+    return remember(imageResource) { SdfShader(imageResource) }
+}
 
 actual fun SdfShader(imageBitmap: ImageBitmap): SdfShader {
     return SdfShaderImpl(imageBitmap)

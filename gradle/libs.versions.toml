@@ -1,10 +1,10 @@
 [versions]
-agp = "9.2.1"
-kotlin = "2.3.21"
+agp = "8.10.1"
+kotlin = "2.2.21-1.0.0"
 
 activity = "1.13.0"
 core = "1.18.0"
-compose = "1.11.0"
+compose = "1.9.2-1.0.0"
 kyantShapes = "1.2.0"
 
 [libraries]
@@ -15,11 +15,13 @@ compose-foundation = { group = "org.jetbrains.compose.foundation", name = "found
 compose-ui = { group = "org.jetbrains.compose.ui", name = "ui", version.ref = "compose" }
 compose-ui-graphics = { group = "org.jetbrains.compose.ui", name = "ui-graphics", version.ref = "compose" }
 compose-material-ripple = { group = "org.jetbrains.compose.material", name = "material-ripple", version.ref = "compose" }
+compose-multiplatform-export = { module = "org.jetbrains.compose.export:export", version.ref = "compose" }
 kyant-shapes = { group = "io.github.kyant0", name = "shapes", version.ref = "kyantShapes" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-android-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 jetbrains-compose = { id = "org.jetbrains.compose", version.ref = "compose" }

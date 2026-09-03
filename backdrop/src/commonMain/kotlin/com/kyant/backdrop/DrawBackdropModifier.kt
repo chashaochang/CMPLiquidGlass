@@ -56,7 +56,7 @@ fun Modifier.drawPlainBackdrop(
     val shapeProvider = ShapeProvider(shape)
     return this
         .then(
-            if (layerBlock != null) {
+            if (layerBlock != null && isRenderEffectSupported()) {
                 Modifier.graphicsLayer(layerBlock)
             } else {
                 Modifier
@@ -94,7 +94,7 @@ fun Modifier.drawBackdrop(
     val shapeProvider = ShapeProvider(shape)
     return this
         .then(
-            if (layerBlock != null) {
+            if (layerBlock != null && isRenderEffectSupported()) {
                 Modifier.graphicsLayer(layerBlock)
             } else {
                 Modifier
@@ -283,7 +283,7 @@ private class DrawBackdropNode(
     }
 
     private val drawBackdropLayer: DrawScope.() -> Unit = {
-        val layer = graphicsLayer
+        val layer = if (isRenderEffectSupported()) graphicsLayer else null
         if (layer != null) {
             val padding = padding
 
@@ -309,7 +309,11 @@ private class DrawBackdropNode(
     ): MeasureResult {
         val placeable = measurable.measure(constraints)
         return layout(placeable.width, placeable.height) {
-            placeable.placeWithLayer(IntOffset.Zero, layerBlock = layoutLayerBlock)
+            if (isRenderEffectSupported()) {
+                placeable.placeWithLayer(IntOffset.Zero, layerBlock = layoutLayerBlock)
+            } else {
+                placeable.place(IntOffset.Zero)
+            }
         }
     }
 
@@ -368,6 +372,8 @@ private class DrawBackdropNode(
     }
 
     override fun onAttach() {
+        if (!isRenderEffectSupported()) return
+
         val graphicsContext = requireGraphicsContext()
         graphicsLayer = graphicsContext.createGraphicsLayer()
 

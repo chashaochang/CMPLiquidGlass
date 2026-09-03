@@ -24,6 +24,8 @@ import com.kyant.backdrop.internal.ShapeProvider
 import com.kyant.backdrop.internal.blur
 import com.kyant.backdrop.internal.clipOutline
 import com.kyant.backdrop.internal.setRuntimeShader
+import com.kyant.backdrop.isGraphicsLayerEffectsSupported
+import com.kyant.backdrop.isRenderEffectSupported
 import com.kyant.backdrop.isRuntimeShaderSupported
 import kotlin.math.ceil
 
@@ -85,12 +87,33 @@ internal class HighlightNode(
     private var prevStyle: HighlightStyle? = null
 
     override fun ContentDrawScope.draw() {
+        if (!isRenderEffectSupported()) return drawContent()
+
         val highlight = highlight()
         if (highlight == null || highlight.width.value <= 0f) {
             return drawContent()
         }
 
         drawContent()
+        if (!isGraphicsLayerEffectsSupported()) {
+            val outline = shapeProvider.shape.createOutline(size, layoutDirection, this)
+            val clipPath =
+                if (outline is Outline.Rounded) {
+                    clipPath ?: Path().also { clipPath = it }
+                } else {
+                    null
+                }
+
+            configurePaint(highlight)
+            paint.alpha = highlight.alpha
+
+            val canvas = drawContext.canvas
+            canvas.save()
+            canvas.clipOutline(outline, clipPath)
+            canvas.drawOutline(outline, paint)
+            canvas.restore()
+            return
+        }
 
         val highlightLayer = highlightLayer
         if (highlightLayer != null) {
@@ -133,14 +156,16 @@ internal class HighlightNode(
     }
 
     override fun onAttach() {
+        if (!isRenderEffectSupported() || !isGraphicsLayerEffectsSupported()) return
+
         val graphicsContext = requireGraphicsContext()
         highlightLayer = graphicsContext.createGraphicsLayer()
     }
 
     override fun onDetach() {
-        val graphicsContext = requireGraphicsContext()
+        val graphicsContext = if (highlightLayer != null) requireGraphicsContext() else null
         highlightLayer?.let { layer ->
-            graphicsContext.releaseGraphicsLayer(layer)
+            graphicsContext?.releaseGraphicsLayer(layer)
             highlightLayer = null
         }
         clipPath = null

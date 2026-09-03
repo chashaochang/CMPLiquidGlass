@@ -1,0 +1,57 @@
+{
+  "app": {
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "targetSdkVersion": "6.0.0(20)",
+        "compatibleSdkVersion": "5.0.5(17)",
+        "runtimeOS": "HarmonyOS",
+        "buildOption": {
+          "nativeCompiler": "BiSheng",
+          "strictMode": {
+            "caseSensitiveCheck": true,
+            "useNormalizedOHMUrl": true
+          }
+        }
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug"
+      },
+      {
+        "name": "release"
+      }
+    ],
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "/Users/machunjiang/.ohos/config/default_harmonyApp_26MZ6XK2jfkgoRJFK80xlmpaGUeymjVEkc80nxFiIxs=.cer",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001BC524AB23FBF71C002E8751B50866905C9C60C48DA91D654F0391C5E3C572039BB0A4F22BB55661",
+          "profile": "/Users/machunjiang/.ohos/config/default_harmonyApp_26MZ6XK2jfkgoRJFK80xlmpaGUeymjVEkc80nxFiIxs=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/machunjiang/.ohos/config/default_harmonyApp_26MZ6XK2jfkgoRJFK80xlmpaGUeymjVEkc80nxFiIxs=.p12",
+          "storePassword": "0000001B4E30CFFFE6FD0F277EA2EA232E2FFB56E932C68B9198187CCBD72E618F15E11F521AF8115A5828"
+        }
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}
