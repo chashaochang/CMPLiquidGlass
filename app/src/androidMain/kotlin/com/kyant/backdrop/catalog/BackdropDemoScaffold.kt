@@ -7,10 +7,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,6 +41,7 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 actual fun BackdropDemoScaffold(
     modifier: Modifier,
+    contentWindowInsets: WindowInsets,
     content: @Composable BoxScope.(backdrop: LayerBackdrop) -> Unit
 ) {
     Box(
@@ -75,7 +78,14 @@ actual fun BackdropDemoScaffold(
             contentScale = ContentScale.Crop
         )
 
-        content(backdrop)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(contentWindowInsets),
+            contentAlignment = Alignment.Center,
+        ) {
+            content(backdrop)
+        }
 
         LiquidButton(
             { pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)) },

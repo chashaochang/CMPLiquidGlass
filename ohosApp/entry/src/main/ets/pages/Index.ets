@@ -1,4 +1,4 @@
-import { ArkUIViewController, Compose } from 'compose';
+import { ArkUIViewController, Compose } from '@cpf-kmp-cmp/compose';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { sensor } from '@kit.SensorServiceKit';
 import nativeApi from 'libentry.so';

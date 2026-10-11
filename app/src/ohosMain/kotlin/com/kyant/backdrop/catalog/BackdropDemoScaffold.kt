@@ -3,7 +3,9 @@ package com.kyant.backdrop.catalog
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,6 +20,7 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 actual fun BackdropDemoScaffold(
     modifier: Modifier,
+    contentWindowInsets: WindowInsets,
     content: @Composable BoxScope.(backdrop: LayerBackdrop) -> Unit,
 ) {
     Box(
@@ -36,6 +39,13 @@ actual fun BackdropDemoScaffold(
             contentScale = ContentScale.Crop,
         )
 
-        content(backdrop)
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .windowInsetsPadding(contentWindowInsets),
+            contentAlignment = Alignment.Center,
+        ) {
+            content(backdrop)
+        }
     }
 }

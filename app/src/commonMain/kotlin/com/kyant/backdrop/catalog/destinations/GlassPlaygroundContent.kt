@@ -6,6 +6,7 @@ import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -57,7 +58,7 @@ fun GlassPlaygroundContent() {
     var refractionAmountFrac by remember { mutableFloatStateOf(0.2f) }
     var chromaticAberration by remember { mutableFloatStateOf(0f) }
 
-    BackdropDemoScaffold { backdrop ->
+    BackdropDemoScaffold(contentWindowInsets = WindowInsets(0, 0, 0, 0)) { backdrop ->
         Box(
             Modifier
                 .padding(top = 48f.dp)

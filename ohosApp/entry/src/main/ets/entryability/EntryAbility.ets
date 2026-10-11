@@ -8,6 +8,7 @@ export default class EntryAbility extends UIAbility {
   }
 
   onWindowStageCreate(windowStage: window.WindowStage): void {
+    windowStage.getMainWindowSync().setWindowLayoutFullScreen(true);
     windowStage.loadContent('pages/Index', (err) => {
       if (err.code) {
         hilog.error(0x0000, 'Glass', 'Failed to load content: %{public}s', JSON.stringify(err));

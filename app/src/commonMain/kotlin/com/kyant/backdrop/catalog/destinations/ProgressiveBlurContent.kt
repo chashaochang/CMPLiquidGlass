@@ -11,14 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kyant.backdrop.catalog.BackdropDemoScaffold
-import com.kyant.backdrop.drawPlainBackdrop
-import com.kyant.backdrop.effects.blur
-import com.kyant.backdrop.effects.runtimeShaderEffect
+import com.kyant.backdrop.catalog.components.progressiveBlur
 
 @Composable
 fun ProgressiveBlurContent() {
@@ -33,32 +30,9 @@ fun ProgressiveBlurContent() {
         ) {
             Box(
                 Modifier
-                    .drawPlainBackdrop(
+                    .progressiveBlur(
                         backdrop = backdrop,
-                        shape = { RectangleShape },
-                        effects = {
-                            blur(4f.dp.toPx())
-                            runtimeShaderEffect(
-                                "AlphaMask",
-                                """
-    uniform shader content;
-    
-    uniform float2 size;
-    layout(color) uniform half4 tint;
-    uniform float tintIntensity;
-    
-    half4 main(float2 coord) {
-        float blurAlpha = smoothstep(size.y, size.y * 0.5, coord.y);
-        float tintAlpha = smoothstep(size.y, size.y * 0.5, coord.y);
-        return mix(content.eval(coord) * blurAlpha, tint * tintAlpha, tintIntensity);
-    }""",
-                                "content"
-                            ) {
-                                setFloatUniform("size", size.width, size.height)
-                                setColorUniform("tint", tintColor)
-                                setFloatUniform("tintIntensity", 0.8f)
-                            }
-                        }
+                        tint = tintColor,
                     )
                     .height(128f.dp)
                     .fillMaxWidth(),

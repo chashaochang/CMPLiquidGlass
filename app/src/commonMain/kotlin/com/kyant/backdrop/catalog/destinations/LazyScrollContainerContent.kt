@@ -23,7 +23,7 @@ import com.kyant.shapes.RoundedRectangle
 
 @Composable
 fun LazyScrollContainerContent() {
-    BackdropDemoScaffold { backdrop ->
+    BackdropDemoScaffold(contentWindowInsets = WindowInsets(0, 0, 0, 0)) { backdrop ->
         LazyColumn(
             Modifier.fillMaxSize(),
             contentPadding = PaddingValues(16f.dp),

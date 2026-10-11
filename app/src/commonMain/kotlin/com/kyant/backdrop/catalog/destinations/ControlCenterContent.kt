@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -200,7 +201,10 @@ fun ControlCenterContent() {
             }
         }
 
-    BackdropDemoScaffold(backdropModifier) { backdrop ->
+    BackdropDemoScaffold(
+        modifier = backdropModifier,
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+    ) { backdrop ->
         Column(
             Modifier
                 .padding(top = 80f.dp)

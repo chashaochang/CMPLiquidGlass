@@ -23,6 +23,10 @@ internal val LocalLiquidBottomTabScale =
 fun RowScope.LiquidBottomTab(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    index: Int = -1,
+    isSelected: Boolean = false,
+    forceCollapse: Boolean = false,
+    collapseProgress: Float = 0f,
     content: @Composable ColumnScope.() -> Unit
 ) {
     val scale = LocalLiquidBottomTabScale.current
@@ -36,7 +40,13 @@ fun RowScope.LiquidBottomTab(
                 onClick = onClick
             )
             .fillMaxHeight()
-            .weight(1f)
+            .weight(
+                if (index >= 0 && (!isSelected || forceCollapse)) {
+                    (1f - collapseProgress).coerceAtLeast(0.001f)
+                } else {
+                    1f
+                }
+            )
             .graphicsLayer {
                 val scale = scale()
                 scaleX = scale

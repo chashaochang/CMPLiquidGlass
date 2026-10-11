@@ -10,15 +10,18 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import com.kyant.backdrop.catalog.destinations.AdaptiveLuminanceGlassContent
+import com.kyant.backdrop.catalog.destinations.ActionBarContent
 import com.kyant.backdrop.catalog.destinations.BottomTabsContent
 import com.kyant.backdrop.catalog.destinations.ButtonsContent
 import com.kyant.backdrop.catalog.destinations.ControlCenterContent
 import com.kyant.backdrop.catalog.destinations.DialogContent
+import com.kyant.backdrop.catalog.destinations.FloatingTabsContent
 import com.kyant.backdrop.catalog.destinations.GlassPlaygroundContent
 import com.kyant.backdrop.catalog.destinations.HomeContent
 import com.kyant.backdrop.catalog.destinations.LazyScrollContainerContent
 import com.kyant.backdrop.catalog.destinations.LockScreenContent
 import com.kyant.backdrop.catalog.destinations.MagnifierContent
+import com.kyant.backdrop.catalog.destinations.MiniBarContent
 import com.kyant.backdrop.catalog.destinations.ProgressiveBlurContent
 import com.kyant.backdrop.catalog.destinations.ScrollContainerContent
 import com.kyant.backdrop.catalog.destinations.SliderContent
@@ -38,9 +41,12 @@ fun MainContent() {
             CatalogDestination.Home -> HomeContent(onNavigate = { destination = it })
 
             CatalogDestination.Buttons -> ButtonsContent()
+            CatalogDestination.ActionBar -> ActionBarContent { destination = CatalogDestination.Home }
             CatalogDestination.Toggle -> ToggleContent()
             CatalogDestination.Slider -> SliderContent()
             CatalogDestination.BottomTabs -> BottomTabsContent()
+            CatalogDestination.FloatingTabs -> FloatingTabsContent()
+            CatalogDestination.MiniBar -> MiniBarContent()
             CatalogDestination.Dialog -> DialogContent()
 
             CatalogDestination.LockScreen -> LockScreenContent()

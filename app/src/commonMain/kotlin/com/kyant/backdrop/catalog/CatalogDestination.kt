@@ -4,9 +4,12 @@ enum class CatalogDestination {
     Home,
 
     Buttons,
+    ActionBar,
     Toggle,
     Slider,
     BottomTabs,
+    FloatingTabs,
+    MiniBar,
     Dialog,
 
     LockScreen,

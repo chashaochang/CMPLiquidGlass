@@ -7,6 +7,6 @@
   "license": "",
   "dependencies": {
     "libentry.so": "file:./src/main/cpp/types/libentry",
-    "compose": "file:./libs/compose.har"
+    "@cpf-kmp-cmp/compose": "file:./libs/compose.har"
   }
 }

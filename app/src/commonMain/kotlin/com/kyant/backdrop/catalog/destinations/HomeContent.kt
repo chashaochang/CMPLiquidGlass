@@ -43,9 +43,12 @@ fun HomeContent(onNavigate: (CatalogDestination) -> Unit) {
         Column {
             Subtitle("Liquid glass components")
             ListItem({ onNavigate(CatalogDestination.Buttons) }, "Buttons")
+            ListItem({ onNavigate(CatalogDestination.ActionBar) }, "Action bar")
             ListItem({ onNavigate(CatalogDestination.Toggle) }, "Toggle")
             ListItem({ onNavigate(CatalogDestination.Slider) }, "Slider")
             ListItem({ onNavigate(CatalogDestination.BottomTabs) }, "Bottom tabs")
+            ListItem({ onNavigate(CatalogDestination.FloatingTabs) }, "Floating tabs")
+            ListItem({ onNavigate(CatalogDestination.MiniBar) }, "Mini bar")
             ListItem({ onNavigate(CatalogDestination.Dialog) }, "Dialog")
 
             Subtitle("System UIs")

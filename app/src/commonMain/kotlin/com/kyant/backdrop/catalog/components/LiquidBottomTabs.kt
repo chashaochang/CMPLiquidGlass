@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.draw.alpha
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -23,7 +25,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -63,31 +64,34 @@ fun LiquidBottomTabs(
     backdrop: Backdrop,
     tabsCount: Int,
     modifier: Modifier = Modifier,
+    compactProgress: () -> Float = { 0f },
     content: @Composable RowScope.() -> Unit
 ) {
     val isLightTheme = !isSystemInDarkTheme()
-    val accentColor =
-        if (isLightTheme) Color(0xFF0088FF)
-        else Color(0xFF0091FF)
     val containerColor =
         if (isLightTheme) Color(0xFFFAFAFA).copy(0.4f)
         else Color(0xFF121212).copy(0.4f)
 
     val tabsBackdrop = rememberLayerBackdrop()
+    val accentColor = if (isLightTheme) Color(0xFF0088FF) else Color(0xFF0091FF)
 
     BoxWithConstraints(
         modifier,
         contentAlignment = Alignment.CenterStart
     ) {
         val density = LocalDensity.current
+        val collapseProgress = compactProgress().fastCoerceIn(0f, 1f)
+        val dockWidth = maxWidth + (58.dp - maxWidth) * collapseProgress
+        val dockHeight = 64.dp + (58.dp - 64.dp) * collapseProgress
+        val dockWidthPx = with(density) { dockWidth.toPx() }
         val tabWidth = with(density) {
-            (constraints.maxWidth.toFloat() - 8f.dp.toPx()) / tabsCount
+            (dockWidthPx - 8f.dp.toPx()) / tabsCount
         }
 
         val offsetAnimation = remember { Animatable(0f) }
         val panelOffset by remember(density) {
             derivedStateOf {
-                val fraction = (offsetAnimation.value / constraints.maxWidth).fastCoerceIn(-1f, 1f)
+                val fraction = (offsetAnimation.value / dockWidthPx).fastCoerceIn(-1f, 1f)
                 with(density) {
                     4f.dp.toPx() * fraction.sign * EaseOut.transform(abs(fraction))
                 }
@@ -180,8 +184,8 @@ fun LiquidBottomTabs(
                     onDrawSurface = { drawRect(containerColor) }
                 )
                 .then(interactiveHighlight.modifier)
-                .height(64f.dp)
-                .fillMaxWidth()
+                .height(dockHeight)
+                .width(dockWidth)
                 .padding(4f.dp),
             verticalAlignment = Alignment.CenterVertically,
             content = content
@@ -219,8 +223,8 @@ fun LiquidBottomTabs(
                         onDrawSurface = { drawRect(containerColor) }
                     )
                     .then(interactiveHighlight.modifier)
-                    .height(56f.dp)
-                    .fillMaxWidth()
+                    .height(dockHeight - 8.dp)
+                    .width(dockWidth)
                     .padding(horizontal = 4f.dp)
                     .graphicsLayer(colorFilter = ColorFilter.tint(accentColor)),
                 verticalAlignment = Alignment.CenterVertically,
@@ -238,6 +242,9 @@ fun LiquidBottomTabs(
                 }
                 .then(interactiveHighlight.gestureModifier)
                 .then(dampedDragAnimation.modifier)
+                .graphicsLayer {
+                    alpha = 1f - (collapseProgress * 2f).fastCoerceIn(0f, 1f)
+                }
                 .drawBackdrop(
                     backdrop = rememberCombinedBackdrop(backdrop, tabsBackdrop),
                     shape = { Capsule() },
@@ -285,8 +292,8 @@ fun LiquidBottomTabs(
                         drawRect(Color.Black.copy(alpha = 0.03f * progress))
                     }
                 )
-                .height(56f.dp)
-                .fillMaxWidth(1f / tabsCount)
+                .height(dockHeight - 8.dp)
+                .width((dockWidth - 8.dp) / tabsCount)
         )
     }
 }

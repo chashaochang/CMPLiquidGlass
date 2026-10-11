@@ -71,6 +71,18 @@ typedef struct {
 } libkn_kref_androidx_compose_ui_graphics_ColorProducer;
 typedef struct {
   libkn_KNativePtr pinned;
+} libkn_kref_androidx_compose_ui_graphics_vector_ImageVector;
+typedef struct {
+  libkn_KNativePtr pinned;
+} libkn_kref_androidx_compose_ui_Modifier;
+typedef struct {
+  libkn_KNativePtr pinned;
+} libkn_kref_com_kyant_backdrop_Backdrop;
+typedef struct {
+  libkn_KNativePtr pinned;
+} libkn_kref_com_kyant_backdrop_backdrops_LayerBackdrop;
+typedef struct {
+  libkn_KNativePtr pinned;
 } libkn_kref_androidx_compose_ui_graphics_ImageBitmap;
 typedef struct {
   libkn_KNativePtr pinned;
@@ -93,9 +105,6 @@ typedef struct {
 typedef struct {
   libkn_KNativePtr pinned;
 } libkn_kref_kotlin_Function3;
-typedef struct {
-  libkn_KNativePtr pinned;
-} libkn_kref_androidx_compose_ui_Modifier;
 typedef struct {
   libkn_KNativePtr pinned;
 } libkn_kref_com_kyant_backdrop_catalog_utils_InteractiveHighlight;
@@ -122,6 +131,9 @@ typedef struct {
 } libkn_kref_com_kyant_backdrop_catalog_CatalogDestination_Buttons;
 typedef struct {
   libkn_KNativePtr pinned;
+} libkn_kref_com_kyant_backdrop_catalog_CatalogDestination_ActionBar;
+typedef struct {
+  libkn_KNativePtr pinned;
 } libkn_kref_com_kyant_backdrop_catalog_CatalogDestination_Toggle;
 typedef struct {
   libkn_KNativePtr pinned;
@@ -129,6 +141,12 @@ typedef struct {
 typedef struct {
   libkn_KNativePtr pinned;
 } libkn_kref_com_kyant_backdrop_catalog_CatalogDestination_BottomTabs;
+typedef struct {
+  libkn_KNativePtr pinned;
+} libkn_kref_com_kyant_backdrop_catalog_CatalogDestination_FloatingTabs;
+typedef struct {
+  libkn_KNativePtr pinned;
+} libkn_kref_com_kyant_backdrop_catalog_CatalogDestination_MiniBar;
 typedef struct {
   libkn_KNativePtr pinned;
 } libkn_kref_com_kyant_backdrop_catalog_CatalogDestination_Dialog;
@@ -186,6 +204,7 @@ extern void* AndroidxComposeUiArkuiArkUiViewControllerGetJsNode(void* controller
 extern libkn_KInt androidx_compose_ui_arkui_ArkUIViewController_getRendererTypeId();
 extern void* androidx_compose_ui_arkui_ArkUIViewController_getXComponentRender(void* controllerRef);
 extern void androidx_compose_ui_arkui_ArkUIViewController_initFusionRendererNode(void* controllerRef, libkn_KBoolean enableCApi, void* rootContent, void* frameMgr);
+extern void androidx_compose_ui_arkui_ArkUIViewController_initFusionRendererNodePreComposed(void* controllerRef, libkn_KBoolean enableCApi, void* rootContent, void* frameMgr, libkn_KBoolean isPreCompose);
 extern void androidx_compose_ui_arkui_ArkUIViewController_keyboardWillHide(void* controllerRef);
 extern void androidx_compose_ui_arkui_ArkUIViewController_keyboardWillShow(void* controllerRef, libkn_KFloat keyboardHeight);
 extern libkn_KBoolean androidx_compose_ui_arkui_ArkUIViewController_onBackPress(void* controllerRef);
@@ -206,6 +225,7 @@ extern libkn_KInt androidx_compose_ui_arkui_ArkUIViewController_requestSyncRefre
 extern const char* androidx_compose_ui_arkui_ArkUIViewController_sendMessage(void* controllerRef, const char* type, const char* message);
 extern void androidx_compose_ui_arkui_ArkUIViewController_setContext(void* controllerRef, void* context);
 extern void androidx_compose_ui_arkui_ArkUIViewController_setEnv(void* controllerRef, void* env);
+extern void androidx_compose_ui_arkui_ArkUIViewController_setFusionRendererRootNode(void* controllerRef, void* rootFrameNode, void* uiContext);
 extern void androidx_compose_ui_arkui_ArkUIViewController_setId(void* controllerRef, const char* id);
 extern void androidx_compose_ui_arkui_ArkUIViewController_setLocaleAndStringProvider(void* controllerRef, void* provider);
 extern void androidx_compose_ui_arkui_ArkUIViewController_setMessenger(void* controllerRef, void* messenger);
@@ -256,6 +276,11 @@ typedef struct {
         struct {
           struct {
             struct {
+              struct {
+                libkn_kref_androidx_compose_ui_graphics_vector_ImageVector (*get_LiquidActionBarBackIcon)();
+                libkn_kref_androidx_compose_ui_graphics_vector_ImageVector (*get_LiquidActionBarMoreIcon)();
+                libkn_kref_androidx_compose_ui_Modifier (*progressiveBlur)(libkn_kref_androidx_compose_ui_Modifier thiz, libkn_kref_com_kyant_backdrop_Backdrop backdrop, libkn_KULong tint, libkn_KFloat blurRadius, libkn_KFloat tintIntensity, libkn_KFloat gradientStartFraction, libkn_kref_com_kyant_backdrop_backdrops_LayerBackdrop exportedBackdrop);
+              } components;
               struct {
                 struct {
                   libkn_KType* (*_type)(void);
@@ -325,6 +350,9 @@ typedef struct {
                   libkn_kref_com_kyant_backdrop_catalog_CatalogDestination (*get)(); /* enum entry for Buttons. */
                 } Buttons;
                 struct {
+                  libkn_kref_com_kyant_backdrop_catalog_CatalogDestination (*get)(); /* enum entry for ActionBar. */
+                } ActionBar;
+                struct {
                   libkn_kref_com_kyant_backdrop_catalog_CatalogDestination (*get)(); /* enum entry for Toggle. */
                 } Toggle;
                 struct {
@@ -333,6 +361,12 @@ typedef struct {
                 struct {
                   libkn_kref_com_kyant_backdrop_catalog_CatalogDestination (*get)(); /* enum entry for BottomTabs. */
                 } BottomTabs;
+                struct {
+                  libkn_kref_com_kyant_backdrop_catalog_CatalogDestination (*get)(); /* enum entry for FloatingTabs. */
+                } FloatingTabs;
+                struct {
+                  libkn_kref_com_kyant_backdrop_catalog_CatalogDestination (*get)(); /* enum entry for MiniBar. */
+                } MiniBar;
                 struct {
                   libkn_kref_com_kyant_backdrop_catalog_CatalogDestination (*get)(); /* enum entry for Dialog. */
                 } Dialog;
@@ -405,6 +439,7 @@ typedef struct {
                 libkn_KInt (*_Export_ArkUIViewController_getRendererTypeId)();
                 void* (*_Export_ArkUIViewController_getXComponentRender)(void* controllerRef);
                 void (*_Export_ArkUIViewController_initFusionRendererNode)(void* controllerRef, libkn_KBoolean enableCApi, void* rootContent, void* frameMgr);
+                void (*_Export_ArkUIViewController_initFusionRendererNodePreComposed)(void* controllerRef, libkn_KBoolean enableCApi, void* rootContent, void* frameMgr, libkn_KBoolean isPreCompose);
                 void (*_Export_ArkUIViewController_keyboardWillHide)(void* controllerRef);
                 void (*_Export_ArkUIViewController_keyboardWillShow)(void* controllerRef, libkn_KFloat keyboardHeight);
                 libkn_KBoolean (*_Export_ArkUIViewController_onBackPress)(void* controllerRef);
@@ -425,6 +460,7 @@ typedef struct {
                 const char* (*_Export_ArkUIViewController_sendMessage)(void* controllerRef, const char* type, const char* message);
                 void (*_Export_ArkUIViewController_setContext)(void* controllerRef, void* context);
                 void (*_Export_ArkUIViewController_setEnv)(void* controllerRef, void* env);
+                void (*_Export_ArkUIViewController_setFusionRendererRootNode)(void* controllerRef, void* rootFrameNode, void* uiContext);
                 void (*_Export_ArkUIViewController_setId)(void* controllerRef, const char* id);
                 void (*_Export_ArkUIViewController_setLocaleAndStringProvider)(void* controllerRef, void* provider);
                 void (*_Export_ArkUIViewController_setMessenger)(void* controllerRef, void* messenger);

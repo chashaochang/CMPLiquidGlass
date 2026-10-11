@@ -3,6 +3,7 @@ package com.kyant.backdrop.catalog.components
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.height
@@ -16,6 +17,7 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.isSpecified
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastCoerceAtMost
 import androidx.compose.ui.util.lerp
@@ -40,6 +42,9 @@ fun LiquidButton(
     isInteractive: Boolean = true,
     tint: Color = Color.Unspecified,
     surfaceColor: Color = Color.Unspecified,
+    height: Dp = 44.dp,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 14.dp),
+    contentSpacing: Dp = 8.dp,
     content: @Composable RowScope.() -> Unit
 ) {
     val animationScope = rememberCoroutineScope()
@@ -113,9 +118,9 @@ fun LiquidButton(
                     Modifier
                 }
             )
-            .height(48f.dp)
-            .padding(horizontal = 16f.dp),
-        horizontalArrangement = Arrangement.spacedBy(8f.dp, Alignment.CenterHorizontally),
+            .height(height)
+            .padding(contentPadding),
+        horizontalArrangement = Arrangement.spacedBy(contentSpacing, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically,
         content = content
     )
