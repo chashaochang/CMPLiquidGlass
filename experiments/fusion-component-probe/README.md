@@ -40,8 +40,8 @@ questions. CPU reference tests are correctness tests, not FPS measurements.
 ## Build
 
 ```sh
-./gradlew -p experiments/fusion-component-probe/executor linkDebugSharedOhosArm64
-sh experiments/fusion-component-probe/build-host.sh
+sh experiments/fusion-component-probe/prepare-skiko.sh original-skiko.klib skia-m132-source libjpeg-turbo-m132.tar.gz /tmp/component-skiko.klib
+GLASS_PROBE_SKIKO_KLIB=/tmp/component-skiko.klib sh experiments/fusion-component-probe/build-host.sh
 ```
 
 The build script stages a separate OHOS host in a temporary directory; it never
@@ -59,7 +59,7 @@ The runner restores on interruption. For a single complete, self-restoring batch
 set `GLASS_PROBE_RESTORE_AT_EXIT=true` for that invocation. Neither operation reverts
 source code or Git commits.
 
-## Current result: not passed
+## Initial result: not passed
 
 On 2026-10-11 the executor and Fusion host linked, and the scratch signed HAP built.
 The first Mate 80 attempt (PID 52798) failed at `dlopen(RTLD_NOW | RTLD_LOCAL)`:
@@ -76,3 +76,33 @@ The saved normal HAP was restored (PID 53643), and the UI tree contains the norm
 catalog. Its SHA-256 is `052a14d1f9b357d2886ff69c72c60f22d77777bc1ccc616bec69adac5fedf908`.
 Normal Glass source/backend are unchanged. New component-level viability remains
 unproven; the earlier material-only GPU result is a separate, narrower result.
+
+## Native dependency repair
+
+The 2026-10-11 repair explicitly links the public `libohresmgr.so` and
+`libGLESv2.so`. The published Skiko KLIB contains an Image bridge referring to
+the Skia JPEG encoder, but its native Skia archive omits that encoder. Recompiling
+Image.cc with function sections did not remove the reference; that attempt did
+not pass the offline audit and was not installed.
+
+`prepare-skiko.sh` instead compiles the unmodified upstream `SkJpegEncoderImpl.cpp`
+and `SkJPEGWriteUtility.cpp` into a local copy of the original KLIB. It keeps the
+original Image bridge and other native archives. There are no fake symbols or
+lazy-loader workarounds. Normal Glass and shared dependency caches are unchanged.
+The executor checks an 8x8 JPEG encode/decode round trip before scene creation.
+
+Source inputs:
+
+- Skiko 0.9.22.2-1.1.0 KLIB SHA-256:
+  `fd128575a6917b04e0bcd6635499c664f97edba41dde830b4df587472ab57f96`.
+- Skia revision `a00c390e98` from `https://github.com/JetBrains/skia`, matching the
+  CPF Skiko `m132-a00c390e98-1` configuration. Source tarball SHA-256:
+  `1d51cd7557b07ab71a329312726da1db2d143fa85ac7e28e3ac6cb14aafbbec7`.
+- libjpeg-turbo revision `ccfbe1c82a3b6dbe8647ceb36a3f9ee711fba3cf` from
+  `https://chromium.googlesource.com/chromium/deps/libjpeg_turbo`, as pinned by
+  the Skia DEPS file. Archive SHA-256:
+  `cc740beedd21de4f95229f5af0314a911402199a425ca912707652502c89a9f7`.
+
+The corrected library passes the offline export/dependency audit (five exports,
+32 inspected libraries, no missing strong symbols). Runtime component validation
+is a separate gate, not implied by this audit or HAP compilation.

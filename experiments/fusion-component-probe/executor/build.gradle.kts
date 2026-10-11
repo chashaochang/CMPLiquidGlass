@@ -4,13 +4,22 @@ plugins {
     id("org.jetbrains.compose") version "1.9.2-1.1.0"
 }
 
+val localSkiko = providers.gradleProperty("probeSkikoKlib").orNull?.let(::file)
+if (localSkiko != null) {
+    configurations.configureEach { exclude(group = "org.jetbrains.skiko") }
+}
+
 kotlin {
     ohosArm64 {
         binaries.sharedLib {
             baseName = "glass_component"
+            export("org.jetbrains.compose.export:export:1.9.2-1.1.0")
             linkerOpts(
-                "-lz", "-luv", "-lunwind", "-lrawfile.z", "-lhilog_ndk.z", "-lEGL", "-lGLESv3",
+                "-lz", "-luv", "-lunwind", "-lrawfile.z", "-lohresmgr", "-lhilog_ndk.z",
+                "-lEGL", "-lGLESv2", "-lGLESv3",
                 "-lace_napi.z", "-lnative_window", "-limage_source", "-lpixelmap", "-licu",
+                "-L${file("../../../ohosApp/entry/oh_modules/@cpf-kmp-cmp/compose/libs/arm64-v8a").absolutePath}",
+                "--no-as-needed", "-lskikobridge", "--as-needed",
                 "-Bsymbolic", "--exclude-libs=ALL", "--version-script=${file("exports.map").absolutePath}",
                 "--entry=0", "--gc-sections",
                 "--undefined=uloc_getDefault", "--undefined=uloc_toLanguageTag",
@@ -40,6 +49,7 @@ kotlin {
                 "com/kyant/backdrop/catalog/FlightIcon.kt",
             )
             dependencies {
+                api("org.jetbrains.compose.export:export:1.9.2-1.1.0")
                 implementation("org.jetbrains.compose.foundation:foundation:1.9.2-1.1.0")
                 implementation("org.jetbrains.compose.ui:ui:1.9.2-1.1.0")
                 implementation("org.jetbrains.compose.ui:ui-graphics:1.9.2-1.1.0")
@@ -59,7 +69,11 @@ kotlin {
                 "com/kyant/backdrop/probe/MaterialGpu.kt",
             )
             dependencies {
-                implementation("org.jetbrains.skiko:skiko-ohosarm64:0.9.22.2-1.1.0")
+                if (localSkiko == null) {
+                    implementation("org.jetbrains.skiko:skiko-ohosarm64:0.9.22.2-1.1.0")
+                } else {
+                    implementation(files(localSkiko))
+                }
             }
         }
         all { languageSettings.enableLanguageFeature("ContextParameters") }

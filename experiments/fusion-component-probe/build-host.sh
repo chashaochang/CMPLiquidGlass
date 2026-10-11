@@ -7,7 +7,12 @@ DEVECO_DIR=${DEVECO_STUDIO_CONTENTS:-/Applications/DevEco-Studio.app/Contents}
 HOST_DIR=$(mktemp -d "${TMPDIR:-/private/tmp}/glass-fusion-component-probe.XXXXXX")
 
 "$ROOT_DIR/gradlew" -p "$PROBE_DIR" linkDebugSharedOhosArm64 --console=plain
-"$ROOT_DIR/gradlew" -p "$PROBE_DIR/executor" linkDebugSharedOhosArm64 --console=plain
+if [ -n "${GLASS_PROBE_SKIKO_KLIB:-}" ]; then
+    "$ROOT_DIR/gradlew" -p "$PROBE_DIR/executor" linkDebugSharedOhosArm64 \
+        "-PprobeSkikoKlib=$GLASS_PROBE_SKIKO_KLIB" --console=plain
+else
+    "$ROOT_DIR/gradlew" -p "$PROBE_DIR/executor" linkDebugSharedOhosArm64 --console=plain
+fi
 
 rsync -a --exclude=build --exclude=oh_modules --exclude=.hvigor --exclude=.cxx \
     --exclude='libs/arm64-v8a' --exclude=composeResources \

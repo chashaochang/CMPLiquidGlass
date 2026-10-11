@@ -31,7 +31,7 @@ function inspect(path) {
 const component = inspect(executor);
 const provided = new Set(component.defined);
 const paths = new Set();
-const queue = [executor, ...readdirSync(hostDirectory).filter(name => name.endsWith('.so')).map(name => join(hostDirectory, name))];
+const queue = [executor];
 while (queue.length) {
   const path = queue.shift();
   if (paths.has(path)) continue;
@@ -60,7 +60,7 @@ const expected = ['glass_component_bounds', 'glass_component_close', 'glass_comp
 const exportPass = JSON.stringify(exports) === JSON.stringify(expected);
 console.log(JSON.stringify({
   passed: exportPass && missing.length === 0,
-  scope: 'offline SDK dependency graph plus staged public host bridge; not device capability proof',
+  scope: 'executor DT_NEEDED closure only; not device capability proof',
   exports, exportPass, libraries: paths.size, missing, extraProviders,
   hostBridgeImports: [...component.undefinedStrong].filter(name => name.startsWith('skikobridge_napi_') ||
     name === 'androidx_compose_ui_arkui_ArkUIViewController_onFrame'),

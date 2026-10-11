@@ -65,6 +65,8 @@ import org.jetbrains.skia.Canvas
 import org.jetbrains.skia.ColorAlphaType
 import org.jetbrains.skia.ColorSpace
 import org.jetbrains.skia.ColorType
+import org.jetbrains.skia.EncodedImageFormat
+import org.jetbrains.skia.Image
 import org.jetbrains.skia.ImageInfo
 import org.jetbrains.skia.Pixmap
 import org.jetbrains.skia.impl.use
@@ -87,6 +89,18 @@ fun initializeComponent(env: CPointer<napi_env__>?): Int {
             ownerThread = pthread_self()
             initMainHandler(env)
             JsEnv.init(env)
+            Bitmap().use { bitmap ->
+                check(bitmap.allocN32Pixels(8, 8))
+                bitmap.erase(0xFF3F89C8.toInt())
+                Image.makeFromBitmap(bitmap).use { image ->
+                    checkNotNull(image.encodeToData(EncodedImageFormat.JPEG, 90)).use { encoded ->
+                        Image.makeFromEncoded(encoded.bytes).use { decoded ->
+                            check(decoded.width == 8 && decoded.height == 8)
+                        }
+                        println("GlassComponentExecutor JPEG_READY bytes=${encoded.size} roundTrip=8x8")
+                    }
+                }
+            }
             initialized = true
             println("GlassComponentExecutor INIT mainHandler=true jsEnv=true backend=skia")
         }
