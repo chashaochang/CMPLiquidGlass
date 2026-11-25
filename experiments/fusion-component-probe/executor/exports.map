@@ -1,0 +1,4 @@
+{
+    global: glass_component_init; glass_component_render; glass_component_input; glass_component_bounds; glass_component_close;
+    local: *;
+};

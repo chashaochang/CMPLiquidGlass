@@ -1,0 +1,4 @@
+{
+    global: glass_material_render; glass_material_render_direct;
+    local: *;
+};
